@@ -24,7 +24,7 @@ PHP编写的MS SQL驱动，主要用来执行存储过程，功能简单。
 
 # script
 
-* cURL的POST, GET应用。
+* cURL的POST，GET应用。
 * writeText的文本写入应用。
 
 
