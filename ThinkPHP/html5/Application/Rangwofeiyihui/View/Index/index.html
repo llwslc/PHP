@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;">
+        <meta http-equiv="Content-Script-Type" content="text/javascript">
+        <meta http-equiv="Content-Style-Type" content="text/css">
+        <meta charset="utf-8">
+        <meta name="viewport" id="viewport" content="width = device-width, initial-scale = 1, minimum-scale = 1, maximum-scale = 1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta equiv="Expires" content="0">
+        <title>
+            让我飞一会
+        </title>
+        <style type="text/css">
+            body { -webkit-user-select: none; margin:0px; background:#000; }
+            #play68box { top: 25%; }
+        </style>
+        <script>
+            document.addEventListener('WeixinJSBridgeReady',
+            function onBridgeReady() {
+                WeixinJSBridge.call('showOptionMenu');
+            });
+        </script>
+        <script type="text/javascript" src="__PUBLIC__/Rangwofeiyihui/play168.js">
+        </script>
+        <script type="text/javascript" src="__PUBLIC__/Rangwofeiyihui/jquery-2.1.1.min.js">
+        </script>
+        <script type="text/javascript" src="__PUBLIC__/Rangwofeiyihui/gm17.min.js">
+        </script>
+    </head>
+    <body onorientationchange="rtalt()" style="-webkit-transform-origin: 0px 0px 0px;">
+        <div id="chf2" style="position:relative;width:320px;margin:0 auto;">
+            <canvas id="gcvs" width="320" height="416">
+            </canvas>
+        </div>
+
+
+        <!-- 计费相关-->
+        <style type="text/css">
+            #confirmWin {
+                visibility: hidden;
+                display: none;
+                width: 0px;
+                height: 0px;
+                margin-top: 0px;
+                margin-left: 0px;
+                left: 0px;
+                top: 0px;
+                z-index: 2;
+                background-image: url('__PUBLIC__/Rangwofeiyihui/skj/confirmBg.png');
+                background-position: 0px 0px;
+                background-size: 100% 100%;
+                background-repeat: repeat;
+            }
+        </style>
+        <div id="publicUrl" paramUrl='__PUBLIC__'></div>
+        <div id="onShopUp" paramUrl="{:U('Index/onShopUp')}"></div>
+        <div id="getShopVCodePic" paramUrl="{:U('Index/getShopVCodePic')}"></div>
+        <div id="confirmShopVCode" paramUrl="{:U('Index/confirmShopVCode')}"></div>
+        <input type="hidden" id="userId" name="userId" value={$userId} />
+        <input type="hidden" id="key" name="key" value={$key} />
+        <input type="hidden" id="shopId" name="shopId" value="" />
+        <input type="hidden" id="confirmId" name="confirmId" value="" />
+
+        <script type="text/javascript">
+        function popup_exit()
+        {
+            var confirmWin = document.getElementById('confirmWin');
+            confirmWin.style.visibility = 'hidden';
+            confirmWin.style.display = 'none';
+        }
+        function popup_show()
+        {
+            confirmWin = document.getElementById('confirmWin');
+            canvas = document.getElementById('gcvs');
+            confirmStr = document.getElementById('confirmStr');
+            confirmWin.style.position = "absolute";
+            confirmWin.style.visibility = "visible";
+            confirmWin.style.display = "block";
+            confirmWin.style.left = canvas.style.left;
+            confirmWin.style.top = canvas.style.top;
+            confirmWin.style.height = canvas.height + "px";
+            confirmWin.style.width = canvas.width + "px";
+            confirmStr.value = "";
+        }
+        function confirmSubmit()
+        {
+            confirmStr = document.getElementById('confirmStr');
+            confirmId = document.getElementById('confirmId');
+            var url = $('#confirmShopVCode').attr('paramUrl') + "?confirmId=" + confirmId.value + "&picVCode=" + confirmStr.value;
+            var postRes = $.post(url, function(data)
+            {
+                popup_exit();
+                strs = data.split("|");
+                var hRet = strs[0];
+                var status = strs[1];
+
+                if(hRet == "0")
+                {
+                    alert("道具购买成功!");
+                }
+
+                if(hRet == "99")
+                {
+                    alert("验证码验证失败.");
+                }
+            });
+        }
+        function confirmRef()
+        {
+            var shopId = $('#shopId').attr('value');
+            shopPost(shopId);
+        }
+        function shopPost(num)
+        {
+            //请求验证
+            var userId = $('#userId').attr('value');
+            var key = $('#key').attr('value');
+            var url = $('#onShopUp').attr('paramUrl') + "?userId=" + userId + "&key=" + key + "&num=" + num;
+            var postRes = $.post(url, function(data)
+            {
+                var strs = new Array();
+                strs = data.split("|");
+                var hRet = strs[0];
+                var status = strs[1];
+                var mUserid = strs[2];
+                var mKey = strs[3];
+                var mNum = strs[4];
+                if(hRet == "0")
+                {
+                    if((mUserid == $('#userId').attr('value')) && mKey == $('#key').attr('value'))
+                    {
+                        alert("购买道具成功!");
+                    }
+                }
+                var shopId = num;
+                var confirmId = strs[5];
+                document.getElementById('shopId').value = shopId;
+                document.getElementById('confirmId').value = confirmId;
+                if(hRet == "1")
+                {
+                    var picVCodeURL = strs[6];
+                    shopVCodePicPost(hRet, picVCodeURL);
+                }
+                if(hRet == "2")
+                {
+                }
+                if(hRet == "3")
+                {
+                    var picVCodeURL = strs[6];
+                    shopVCodePicPost(hRet, picVCodeURL);
+                }
+                if(hRet == "99")
+                {
+                    alert("购买道具失败.");
+                }
+            });
+        }
+        function shopVCodePicPost(hRet, picVCodeURL)
+        {
+            //请求验证
+            var url = $('#getShopVCodePic').attr('paramUrl') + "?hRet=" + hRet + "&picVCodeURL=" + picVCodeURL;
+            $("#confirmBtn").click();
+            document.getElementById('confirmPic').src = url;
+        }
+        </script>
+        <input id="confirmBtn" style="visibility: hidden" type="button" onclick="popup_show()" value='验证'/>
+        <div id="confirmWin" style="visibility: hidden; display: none">
+            <table>
+                <tr>
+                    <th><p style="text-align: right">验证码: </p></th>
+                    <td>
+                        <img id="confirmPic" src="__PUBLIC__/Rangwofeiyihui/skj/play68.png" />
+                        <input id="refBtn" type="button" onclick = "confirmRef()" value="刷新验证码" />
+                    </td>
+                </tr>
+                <tr>
+                    <th><p style="text-align: right">输入验证码: </p></th>
+                    <td><input id="confirmStr" type="text" /></td>
+                </tr>
+                <tr>
+                    <th> </th>
+                    <td>
+                        <input id="submitBtn" type="button" onclick = "confirmSubmit()" value="提交" />
+                        <input id="cancelBtn" type="button" onclick = "popup_exit();" value="取消" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+        <link type="text/css" rel="stylesheet" href="__PUBLIC__/Rangwofeiyihui/sidebar.css">
+        <script type="text/javascript" src="__PUBLIC__/Rangwofeiyihui/play68bar.js">
+        </script>
+    </body>
+
+</html>

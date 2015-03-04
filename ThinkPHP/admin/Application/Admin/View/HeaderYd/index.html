@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>{$title}</title>
+
+
+  <link rel="stylesheet" href="__PUBLIC__/Css/admin/reset.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="__PUBLIC__/Css/admin/stylex.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="__PUBLIC__/Css/admin/invalid.css" type="text/css" media="screen" />
+
+  <script type="text/javascript" src="__PUBLIC__/Js/admin/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="__PUBLIC__/Js/admin/simpla.jquery.configuration.js"></script>
+  <script type="text/javascript" src="__PUBLIC__/Js/admin/facebox.js"></script>
+  <script type="text/javascript" src="__PUBLIC__/Js/admin/jquery.wysiwyg.js"></script>
+
+  <link rel="stylesheet" href="__PUBLIC__/Calendar/date_input.css" type="text/css"/>
+  <script type="text/javascript" src="__PUBLIC__/Calendar/jquery.date_input.js"></script>
+  <script type="text/javascript" language="javascript">
+  jQuery.extend(DateInput.DEFAULT_OPTS, {
+    month_names: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    short_month_names: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+    short_day_names: ["日", "一", "二", "三", "四", "五", "六"],
+    dateToString: function(date) {
+      var month = (date.getMonth() + 1).toString();
+      var dom = date.getDate().toString();
+      if (month.length == 1) month = "0" + month;
+      if (dom.length == 1) dom = "0" + dom;
+      return date.getFullYear() + "-" + month + "-" + dom;
+    }
+  });
+
+  $(function() {
+    $(".date_input").date_input();
+  });
+
+  function iFrameHeightContent() {
+    var ifr= document.getElementById("iframeContent");
+    var doc = document.frames ? document.frames["iframeContent"].document : ifr.contentDocument;
+    //doc.onclick=function(){
+      //ifr.style.height=(document.all?doc.body.scrollHeight:doc.body.offsetHeight)+'px';
+      //ifr.style.height=doc.body.firstChild.offsetHeight;//有根节点可以使用根节点，兼容性比较好，opera，safari，google的浏览器都可以兼容，如果使用body.offsetHeight只在ff下有效果
+    //}
+    if(ifr != null && doc != null) {
+      ifr.height = (document.all?doc.body.scrollHeight:doc.body.offsetHeight)+'px';
+    }
+    window.parent.iFrameHeightHeader();
+  }
+
+  function liaClick(para) {
+    var canalId = document.getElementById("canalId").value;
+    var preDate = document.getElementById("preDate").value;
+    var nxtDate = document.getElementById("nxtDate").value;
+    var zoneName = document.getElementById("zoneName").value;
+    var para = 'canalId='+canalId+'&preDate='+preDate+'&nxtDate='+nxtDate+'&zoneName='+zoneName;
+    if (para)
+    {
+      window.self.frames['iframeContent'].location = "__ROOT__/Admin/ContentYd/Index?" + para;
+    }
+  }
+  </script>
+
+</head>
+
+<body>
+  <div id="main-content">
+    <h2>后台管理系统</a></h2>
+    <br></br>
+
+    <form>
+      <p>
+        <span  class="mspan">渠道标识: </span>
+        <input id="canalId", type="text" class="text-input medium-input" name="canalId" >
+      </p>
+      <p>
+        <span  class="mspan">从: </span>
+        <input id="preDate", type="text" class="text-input date_input" name="preDate" >
+        <span  class="mspan">到: </span>
+        <input id="nxtDate", type="text" class="text-input date_input" name="nxtDate" >
+        <span  class="mspan">游戏: </span>
+        <select id="zoneName", name="dropdown" class="text-input small-input" name="zoneName">
+          <option value=""></option>
+          <option value="game1">game1</option>
+          <option value="game2">game2</option>
+        </select>
+      </p>
+
+      <ul class="shortcut-buttons-set">
+        <li>
+          <a class="shortcut-button" href="javascript: liaClick('')">
+            <span>
+              <img src="__PUBLIC__/Images/admin/icons/pencil_48.png" alt="icon" /><br />
+              查询
+            </span>
+          </a>
+        </li>
+
+      </ul>
+      <div class="clear"></div>
+    </form>
+
+    <iframe src="__ROOT__/Admin/ContentYd/Index" id="iframeContent" name="iframeContent" frameBorder=0 scrolling=no width="100%" onLoad="iFrameHeightContent()" ></iframe>
+    <noframes></noframes>
+    <!-- End #main-content -->
+
+    <!-- End #main-content -->
+  </div>
+</body>
+</html>
